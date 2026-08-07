@@ -3,15 +3,16 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
+  const imaniStays = {
+    name: "Imani Stays",
+    whatsapp: "2348157082684", // real pilot number, intl digits only
+    vertical: "SHORTLET" as const,
+  };
+
   await prisma.business.upsert({
     where: { slug: "imani-stays" },
-    update: {},
-    create: {
-      name: "Imani Stays",
-      slug: "imani-stays",
-      whatsapp: "2348160000000", // placeholder — swap in the real number
-      vertical: "SHORTLET",
-    },
+    update: imaniStays,
+    create: { slug: "imani-stays", ...imaniStays },
   });
 }
 
