@@ -1,26 +1,85 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --vanilla: #f3ebd6; /* page background */
+  --ivory: #fcf9f1; /* card/input surface */
+  --ink: #1b2133; /* primary text */
+  --moon: #8c99b6; /* muted labels, dividers */
+  --dusk: #2e3652; /* primary button */
+  --glow: #c29a3f; /* accent — focus rings + ticket stamp ONLY */
+  --line: #e4dac2; /* hairline borders */
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-vanilla: var(--vanilla);
+  --color-ivory: var(--ivory);
+  --color-ink: var(--ink);
+  --color-moon: var(--moon);
+  --color-dusk: var(--dusk);
+  --color-glow: var(--glow);
+  --color-line: var(--line);
+  --font-sans: var(--font-hanken);
+  --font-display: var(--font-fraunces);
+  --font-mono: var(--font-spline-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--vanilla);
+  background-image: radial-gradient(circle at 50% 0%, rgba(140, 153, 182, 0.28), transparent 70%);
+  background-repeat: no-repeat;
+  background-size: 100% 640px;
+  color: var(--ink);
+  font-family: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--glow);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* Boarding-pass style punched notches on the reservation ticket */
+.ticket-perforation {
+  position: relative;
+}
+
+.ticket-perforation::before,
+.ticket-perforation::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 28px;
+  height: 28px;
+  background: var(--vanilla);
+  border-radius: 9999px;
+  transform: translateY(-50%);
+}
+
+.ticket-perforation::before {
+  left: -14px;
+}
+
+.ticket-perforation::after {
+  right: -14px;
+}
+
+@keyframes ticket-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.ticket-reveal {
+  animation: ticket-reveal 420ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticket-reveal {
+    animation: none;
+  }
 }

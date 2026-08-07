@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Business {
+  id        String   @id @default(cuid())
+  slug      String   @unique // public link: /b/imani-stays
+  name      String
+  whatsapp  String // owner number, intl digits only: 234816...
+  vertical  Vertical @default(SHORTLET)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  inquiries Inquiry[]
+}
+
+model Inquiry {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id])
+
+  guestName   String
+  location    String?
+  guests      Int?
+  checkIn     DateTime?
+  checkOut    DateTime?
+  bedrooms    Int?
+  listingType ListingType? // real estate only
+  budget      String? // free text — "150k", "100-200k". DON'T parse to Int in v1.
+  note        String?
+
+  status    InquiryStatus @default(NEW)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([businessId, status])
+}
+
+enum Vertical {
+  SHORTLET
+  REAL_ESTATE
+}
+
+enum ListingType {
+  RENT
+  BUY
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  BOOKED
+  LOST
+}
